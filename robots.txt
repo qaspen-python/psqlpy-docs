@@ -2,4 +2,4 @@
 User-agent:*
 Disallow:
 
-Sitemap: https://vuepress-theme-hope-docs-demo.netlify.app/psqlpy-docs/sitemap.xml
+Sitemap: https://github.com/qaspen-python/psqlpy/psqlpy-docs/sitemap.xml
