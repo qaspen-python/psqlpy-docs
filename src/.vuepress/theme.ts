@@ -2,13 +2,13 @@ import { hopeTheme } from "vuepress-theme-hope";
 import sidebar from "./sidebar.js";
 
 export default hopeTheme({
-  hostname: "https://vuepress-theme-hope-docs-demo.netlify.app",
+  hostname: "https://github.com/qaspen-python/psqlpy",
 
   iconAssets: "fontawesome-with-brands",
 
   logo: "./logo.png",
 
-  repo: "vuepress-theme-hope/vuepress-theme-hope",
+  repo: "qaspen-python/psqlpy",
 
   docsDir: "src",
 
