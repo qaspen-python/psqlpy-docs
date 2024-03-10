@@ -3,7 +3,7 @@ title: Let's Start
 ---
 
 ## Installation
-You can install psqlpy from pypi, poetry or directly from git using pip:
+You can install psqlpy with pip, poetry or directly from git using pip:
 
 ::: code-tabs#shell
 @tab pip
