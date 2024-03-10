@@ -1,5 +1,5 @@
 ---
-title: Usage
+title: PSQPy Usage
 ---
 
 Feature details here.
