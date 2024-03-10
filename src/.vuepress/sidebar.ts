@@ -7,7 +7,11 @@ export default sidebar({
       text: "Introduction",
       prefix: "introduction/",
       collapsible: true,
-      children: "structure",
+      children: [
+        "introduction",
+        "lets_start",
+        "components_overview",
+      ],
     },
     {
       text: "Usage",

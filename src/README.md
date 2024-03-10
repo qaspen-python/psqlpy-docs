@@ -12,7 +12,7 @@ actions:
     link: ./introduction/
   
   - text: Introduction
-    link: ./introduction/
+    link: ./introduction/introduction
 
 highlights:
   -  features:
