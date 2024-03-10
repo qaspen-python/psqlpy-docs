@@ -1,7 +1,7 @@
 ---
 home: true
 icon: home
-title: Project home
+title: PSQLPy documentation
 heroImage: ./logo.png
 heroText: PSQLPy
 tagline: Asynchronous Python PostgreSQL driver written in Rust

@@ -12,9 +12,6 @@ export default hopeTheme({
 
   docsDir: "src",
 
-  // navbar
-  // navbar,
-
   // sidebar
   sidebar,
 
