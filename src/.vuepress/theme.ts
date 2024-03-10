@@ -18,7 +18,7 @@ export default hopeTheme({
   // sidebar
   sidebar,
 
-  footer: "Default footer",
+  footer: "MIT Licensed | Copyright© 2024",
 
   displayFooter: true,
 

@@ -23,7 +23,7 @@ highlights:
         details: PSQLPy has type for each class, function, method and etc.
 
       - title: Blazingly Fast
-        details: PSQLPy beats others PostgreSQL driver in different benchmarks.
+        details: PSQLPy beats others PostgreSQL drivers in different benchmarks.
 
       - title: Under active development
         details: PSQLPy is under active development.
