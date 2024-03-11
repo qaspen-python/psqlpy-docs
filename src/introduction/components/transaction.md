@@ -249,3 +249,21 @@ async def main() -> None:
     await transaction.savepoint("my_savepoint")
     await transaction.release_savepoint
 ```
+
+### Cursor
+From `Transaction` you can create new `Cursor` object which represents cursor in the `PostgreSQL`.
+```python
+async def main() -> None:
+    ...
+    transaction = await connection.transaction()
+
+    cursor = await transaction.cursor(
+        querystring="SELECT * FROM users WHERE username = $1",
+        parameters=["Some_Username"],
+        fetch_number=5,
+    )
+
+    async for fetched_result in cursor:
+        dict_result: List[Dict[Any, Any]] = fetched_result.result()
+        ... # do something with the result.
+```

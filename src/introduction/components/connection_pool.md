@@ -15,7 +15,15 @@ Connection pool must be started up before any other operations.
 - `port`: port of the `PostgreSQL`.
 - `db_name`: database name in the `PostgreSQL`.
 - `max_db_pool_size`: maximum size for the connection pool. Minimal and default = 2
-- `conn_recycling_method`: how a connection is recycled.
+- `conn_recycling_method`: how a connection is recycled.  
+
+Some example of possible `dsn`s:
+```
+postgresql://user@localhost
+postgresql://user:password@%2Fvar%2Flib%2Fpostgresql/mydb?connect_timeout=10
+postgresql://user@host1:1234,host2,host3:5678?target_session_attrs=read-write
+postgresql:///mydb?user=user&host=/var/lib/postgresql
+```
 ::: important
 If `dsn` is specified then other connection parameters don't have any effect.
 :::

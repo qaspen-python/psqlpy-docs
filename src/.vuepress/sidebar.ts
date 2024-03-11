@@ -19,6 +19,7 @@ export default sidebar({
             "connection_pool",
             "connection",
             "transaction",
+            "cursor",
           ],
         }
       ],
