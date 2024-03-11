@@ -29,7 +29,8 @@ highlights:
         details: PSQLPy is under active development.
 ---
 ## What is PSQLPy
-You can consider `PSQPy` as `Psycopg3` or `AsyncPG` but it has more security and it's faster.
+You can consider `PSQPy` as `Psycopg3` or `AsyncPG` but it has more security and it's faster.  
+PSQLPy API is a link from `PostgreSQL` to `Python`, it means that if you can do specific command only in transaction then `PSQLPy` won't provide this command in `Connection` or `Cursor`, it will be available only in `Transaction` object.
 
 ## How to install
 Using pip

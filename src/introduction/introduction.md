@@ -5,7 +5,11 @@ title: Introduction
 ## PSQLPy - what is it?
 PSQLPy is a library that allows you to work with `PostgreSQL` database. For example, running CRUD queries like SELECT.  
 It has Connections, Connection Pool, Transactions, Cursors and ways to operate this abstracts.   
-The main goal of this library is speed. It is written in Rust and outperforms all exists drivers, at least with our benchmarks.
+The main goal of this library is speed. It is written in Rust and outperforms all exists drivers, at least with our benchmarks.  
+::: info
+It is extremely important to understand that the library will provide a noticeable acceleration in working with the database only if your queries are optimized.  
+Otherwise, there will be acceleration, but not so significant
+:::
 
 ## Why PSQLPy?
 There are some reasons:
