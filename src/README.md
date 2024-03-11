@@ -9,7 +9,7 @@ actions:
   - text: Let's start
     icon: lightbulb
     type: primary
-    link: ./introduction/
+    link: ./introduction/lets_start
   
   - text: Introduction
     link: ./introduction/introduction

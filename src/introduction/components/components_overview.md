@@ -1,5 +1,5 @@
 ---
-title: Components Overview
+title: Components
 ---
 
 ## Components
@@ -11,6 +11,3 @@ title: Components Overview
 - `SingleQueryResult`: represents single result from the database.
 - `Exceptions`: we have some custom exceptions.
 
-## Connection pool
-Connection pool is the main object in the library. It initializes, creates, holds and gives connection to the user side.  
-Connection pool must be started up before any other operations.

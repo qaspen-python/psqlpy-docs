@@ -10,7 +10,17 @@ export default sidebar({
       children: [
         "introduction",
         "lets_start",
-        "components_overview",
+        {
+          text: "Components Overview",
+          prefix: "components/",
+          collapsible: true,
+          children: [
+            "components_overview",
+            "connection_pool",
+            "connection",
+            "transaction",
+          ],
+        }
       ],
     },
     {
