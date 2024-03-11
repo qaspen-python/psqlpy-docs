@@ -4,6 +4,11 @@ title: Transaction
 `Transaction` object represents `PostgreSQL` transaction.  
 There are two ways of how we can work with transactions on `PSQLPy` side.
 
+### Transaction parameters
+- `isolation_level`: level of isolation. Default how it is in PostgreSQL.
+- `read_variant`: configure read variant of the transaction. Default how it is in PostgreSQL.
+- `deferrable`: configure deferrable of the transaction. Default how it is in PostgreSQL.
+
 ### Control transaction fully on your own.
 First of all, you can get transaction object only from connection object.
 ```python
@@ -40,7 +45,7 @@ async def main() -> None:
 ```
 Good! We've inserted our first row, but if we won't commit the transaction all changes will discard.  
 ::: warning
-We need to commit our changes.
+We need to commit changes.
 :::
 ```python
 async def main() -> None:
@@ -51,7 +56,7 @@ So, now everything is fine, changes are committed. But you can say that it's too
 We have an alternative way to handle `begin()` and `commit()` automatically.
 
 ### Control transaction with async context manager.
-There is previous example but it is rewritten with use of async context manager.
+There is the previous example but it is rewritten with use of async context manager.
 ```python
 from psqlpy import PSQLPool
 
@@ -79,3 +84,168 @@ If a query raises an error in our async context manager, `ROLLBACK` is executed 
 ::: important
 Transaction can be began only once, so if you have already called `begin()` manually then async context manager initialize will fail, you need to choose what to use.
 :::
+
+## Transaction methods
+
+### Begin
+You can start a transaction manually.
+```python
+async def main() -> None:
+    ...
+    await transaction.begin()
+    ...
+```
+
+### Commit
+You can commit a transaction manually.
+```python
+async def main() -> None:
+    ...
+    await transaction.commit()
+    ...
+```
+
+### Execute
+You can execute any query directly from `Transaction` object.  
+This method supports parameters, each parameter must be marked as `$<number>` (number starts with 1).  
+Parameters must be passed as list after a querystring.
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    async with connection.transaction() as transaction:
+        results: QueryResult = await transaction.execute(
+            querystring="SELECT * FROM users WHERE id = $1 and username = $2",
+            parameters=[100, "Alex"],
+        )
+
+    dict_results: list[dict[str, Any]] = results.result()
+```
+
+### Execute Many
+If you want to execute the same querystring, but with different parameters, `execute_many` is for you!
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    async with connection.transaction() as transaction:
+        await transaction.execute_many(
+            "INSERT INTO users (name, age) VALUES ($1, $2)",
+            [["boba", 10], ["biba", 20]],
+        )
+```
+
+### Fetch Row
+Sometimes you need to fetch only first row from the result.
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    async with connection.transaction() as transaction:
+        query_result: SingleQueryResult = await transaction.fetch_row(
+            "SELECT username FROM users WHERE id = $1",
+            [100],
+        )
+    dict_result: Dict[Any, Any] = query_result.result()
+```
+
+### Pipeline
+Execute queries in pipeline.
+Pipelining can improve performance in use cases in which multiple,
+independent queries need to be executed.
+In a traditional workflow,
+each query is sent to the server after the previous query completes.
+In contrast, pipelining allows the client to send all of the
+queries to the server up front, minimizing time spent
+by one side waiting for the other to finish sending data:
+```
+            Sequential                               Pipelined
+| Client         | Server          |    | Client         | Server          |
+|----------------|-----------------|    |----------------|-----------------|
+| send query 1   |                 |    | send query 1   |                 |
+|                | process query 1 |    | send query 2   | process query 1 |
+| receive rows 1 |                 |    | send query 3   | process query 2 |
+| send query 2   |                 |    | receive rows 1 | process query 3 |
+|                | process query 2 |    | receive rows 2 |                 |
+| receive rows 2 |                 |    | receive rows 3 |                 |
+| send query 3   |                 |
+|                | process query 3 |
+| receive rows 3 |                 |
+```
+[Read more!](https://docs.rs/tokio-postgres/latest/tokio_postgres/#pipelining)
+
+Full example:
+```python
+import asyncio
+
+from psqlpy import PSQLPool, QueryResult
+
+
+async def main() -> None:
+    db_pool = PSQLPool()
+    await db_pool.startup()
+
+    connection = await db_pool.connection()
+    transaction = connection.transaction()
+
+    results: list[QueryResult] = await transaction.pipeline(
+        queries=[
+            (
+                "SELECT username FROM users WHERE id = $1",
+                [100],
+            ),
+            (
+                "SELECT some_data FROM profiles",
+                None,
+            ),
+            (
+                "INSERT INTO users (username, id) VALUES ($1, $2)",
+                ["PSQLPy", 1],
+            ),
+        ]
+    )
+
+```
+
+### Savepoint
+You can create savepoint. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+```python
+async def main() -> None:
+    ...
+    await transaction.savepoint("my_savepoint")
+    await transaction.execute(...)
+    await transaction.rollback_to("my_savepoint")
+```
+
+### Rollback
+You can rollback the whole transaction. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-rollback.html)
+```python
+async def main() -> None:
+    ...
+    await transaction.execute(...)
+    await transaction.rollback()
+```
+
+### Rollback To
+Rollback to the specified savepoint. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+```python
+async def main() -> None:
+    ...
+    transaction = connection.transaction()
+
+    await transaction.savepoint("my_savepoint")
+    await transaction.execute(...)
+    await transaction.rollback_to("my_savepoint")
+```
+
+### Release Savepoint
+Release savepoint. You must create it firstly. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    transaction = connection.transaction()
+
+    await transaction.savepoint("my_savepoint")
+    await transaction.release_savepoint
+```

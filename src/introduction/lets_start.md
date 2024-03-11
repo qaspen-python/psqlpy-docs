@@ -18,9 +18,9 @@ pip install psqlpy
 poetry add psqlpy
 ```
 
-@tab poetry
+@tab git
 
-```git
+```bash
 pip install git+https://github.com/qaspen-python/psqlpy
 ```
 :::

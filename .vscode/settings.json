@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
-        "psqlpy"
+        "psqlpy",
+        "savepoint"
     ]
 }

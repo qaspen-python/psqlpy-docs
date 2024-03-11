@@ -40,8 +40,8 @@ async def main() -> None:
 `Connection` is the only object that can be used to build `Transaction` object.  
 All parameters for transaction:
 - `isolation_level`: level of isolation. Default how it is in PostgreSQL.
-- `read_variant`: configure read variant of the transaction.
-- `deferrable`: configure deferrable of the transaction.
+- `read_variant`: configure read variant of the transaction. Default how it is in PostgreSQL.
+- `deferrable`: configure deferrable of the transaction. Default how it is in PostgreSQL.
 
 Let's see some example:
 ```python
