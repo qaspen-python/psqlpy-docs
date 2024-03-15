@@ -29,8 +29,12 @@ highlights:
         details: PSQLPy is under active development.
 ---
 ## What is PSQLPy
-You can consider `PSQPy` as `Psycopg3` or `AsyncPG` but it has more security and it's faster.  
-PSQLPy API is a link from `PostgreSQL` to `Python`, it means that if you can do specific command only in transaction then `PSQLPy` won't provide this command in `Connection` or `Cursor`, it will be available only in `Transaction` object.
+`PSQLPy` is a brand new Python driver for `PostgreSQL` fully written in Rust. It was inspired by `Psycopg3` and `AsyncPG`.  
+This project has two main goals:  
+Make a interaction with the database as fast as possible and now `PSQLPy` shows itself to be many times faster than the above drivers.  
+Don't make useless abstractions and make it like a mirror to `PostgreSQL`.  
+
+It has all necessary components to create high-load and fault tolerance applications.
 
 ## How to install
 Using pip
@@ -39,6 +43,6 @@ pip install psqlpy
 ```
 
 Using poetry
-```
+```bash
 poetry add psqlpy
 ```

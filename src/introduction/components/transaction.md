@@ -106,9 +106,14 @@ async def main() -> None:
 ```
 
 ### Execute
+
+#### Parameters:
+- `querystring`: Statement string.
+- `parameters`: List of parameters for the statement string.
+- `prepared`: Prepare statement before execution or not.
+
 You can execute any query directly from `Transaction` object.  
 This method supports parameters, each parameter must be marked as `$<number>` (number starts with 1).  
-Parameters must be passed as list after a querystring.
 ```python
 async def main() -> None:
     ...
@@ -123,6 +128,12 @@ async def main() -> None:
 ```
 
 ### Execute Many
+
+#### Parameters:
+- `querystring`: Statement string.
+- `parameters`: List of list of parameters for the statement string.
+- `prepared`: Prepare statements before execution or not.
+
 If you want to execute the same querystring, but with different parameters, `execute_many` is for you!
 ```python
 async def main() -> None:
@@ -136,7 +147,37 @@ async def main() -> None:
 ```
 
 ### Fetch Row
+
+- `querystring`: Statement string.
+- `parameters`: List of list of parameters for the statement string.
+- `prepared`: Prepare statements before execution or not.
+
 Sometimes you need to fetch only first row from the result.
+::: warning
+Querystring must return exactly one result or an exception will be raised.
+:::
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    async with connection.transaction() as transaction:
+        query_result: SingleQueryResult = await transaction.fetch_row(
+            "SELECT username FROM users WHERE id = $1",
+            [100],
+        )
+    dict_result: Dict[Any, Any] = query_result.result()
+```
+
+### Fetch Val
+
+- `querystring`: Statement string.
+- `parameters`: List of list of parameters for the statement string.
+- `prepared`: Prepare statements before execution or not.
+
+If you need to retrieve some value not `QueryResult`.
+::: warning
+Querystring must return exactly one result or an exception will be raised.
+:::
 ```python
 async def main() -> None:
     ...
@@ -150,6 +191,17 @@ async def main() -> None:
 ```
 
 ### Pipeline
+
+#### Parameters
+- `queries`: list of tuple. It must have structure like
+```python
+queries = [
+    ("SELECT * FROM users WHERE name = $1", ["some_name"]),
+    ("SELECT 1", None),
+]
+```
+- `prepared`: Prepare statements before execution or not.
+
 Execute queries in pipeline.
 Pipelining can improve performance in use cases in which multiple,
 independent queries need to be executed.
@@ -208,7 +260,7 @@ async def main() -> None:
 ```
 
 ### Savepoint
-You can create savepoint. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+Savepoint creation. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
 ```python
 async def main() -> None:
     ...
@@ -218,7 +270,7 @@ async def main() -> None:
 ```
 
 ### Rollback
-You can rollback the whole transaction. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-rollback.html)
+Rollback the whole transaction. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-rollback.html)
 ```python
 async def main() -> None:
     ...
@@ -239,7 +291,7 @@ async def main() -> None:
 ```
 
 ### Release Savepoint
-Release savepoint. You must create it firstly. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+Release savepoint. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
 ```python
 async def main() -> None:
     ...
@@ -251,7 +303,15 @@ async def main() -> None:
 ```
 
 ### Cursor
-From `Transaction` you can create new `Cursor` object which represents cursor in the `PostgreSQL`.
+
+#### Parameters
+- `querystring`: Statement string.
+- `parameters`: List of list of parameters for the statement string.
+- `fetch_number`: rewrite default fetch_number. Default is 10.
+- `scroll`: make cursor scrollable or not. Default is like in `PostgreSQL`.
+- `prepared`: prepare querystring or not.
+
+From `Transaction` you can create new `Cursor` object which represents cursor in the `PostgreSQL`. [PostgreSQL Docs](https://www.postgresql.org/docs/current/plpgsql-cursors.html)
 ```python
 async def main() -> None:
     ...

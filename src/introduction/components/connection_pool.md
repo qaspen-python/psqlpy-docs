@@ -67,6 +67,12 @@ async def main() -> None:
 ```
 
 ### Execute
+
+#### Parameters:
+- `querystring`: Statement string.
+- `parameters`: List of parameters for the statement string.
+- `prepared`: Prepare statement before execution or not.
+
 You can execute any query directly from Connection Pool.  
 This method supports parameters, each parameter must be marked as `$<number>` (number starts with 1).  
 Parameters must be passed as list after querystring.

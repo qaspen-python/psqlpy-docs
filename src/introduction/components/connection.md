@@ -21,9 +21,14 @@ async def main() -> None:
 ## Connection methods
 
 ### Execute
+
+#### Parameters:
+- `querystring`: Statement string.
+- `parameters`: List of parameters for the statement string.
+- `prepared`: Prepare statement before execution or not.
+
 You can execute any query directly from `Connection` object.  
-This method supports parameters, each parameter must be marked as `$<number>` (number starts with 1).  
-Parameters must be passed as list after a querystring.
+This method supports parameters, each parameter must be marked as `$<number>` in querystring (number starts with 1).  
 ```python
 async def main() -> None:
     ...
@@ -38,12 +43,12 @@ async def main() -> None:
 
 ### Transaction
 `Connection` is the only object that can be used to build `Transaction` object.  
-All parameters for transaction:
+
+#### Parameters:
 - `isolation_level`: level of isolation. Default how it is in PostgreSQL.
 - `read_variant`: configure read variant of the transaction. Default how it is in PostgreSQL.
 - `deferrable`: configure deferrable of the transaction. Default how it is in PostgreSQL.
 
-Let's see some example:
 ```python
 from psqlpy import IsolationLevel, ReadVariant
 
