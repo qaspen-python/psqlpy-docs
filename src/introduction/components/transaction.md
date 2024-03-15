@@ -317,11 +317,12 @@ async def main() -> None:
     ...
     transaction = await connection.transaction()
 
-    cursor = await transaction.cursor(
+    cursor = transaction.cursor(
         querystring="SELECT * FROM users WHERE username = $1",
         parameters=["Some_Username"],
         fetch_number=5,
     )
+    await cursor.start()
 
     async for fetched_result in cursor:
         dict_result: List[Dict[Any, Any]] = fetched_result.result()

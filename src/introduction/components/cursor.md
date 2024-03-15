@@ -23,14 +23,12 @@ async def main() -> None:
     connection = await db_pool.connection()
     transaction = await connection.transaction()
 
-    cursor = await transaction.cursor(
+    # Here we fetch 5 results in each iteration.
+    async for fetched_result in transaction.cursor(
         querystring="SELECT * FROM users WHERE username = $1",
         parameters=["Some_Username"],
         fetch_number=5,
-    )
-
-    # Here we fetch 5 results in each iteration.
-    async for fetched_result in cursor:
+    ):
         dict_result: List[Dict[Any, Any]] = fetched_result.result()
         ... # do something with this result.
 ```
