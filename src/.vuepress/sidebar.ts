@@ -28,7 +28,18 @@ export default sidebar({
       text: "Usage",
       prefix: "usage/",
       collapsible: true,
-      children: "structure",
+      children: [
+        "aiohttp",
+        "fastapi",
+        // {
+        //   text: "FastAPI",
+        //   prefix: "fastapi/",
+        //   collapsible: true,
+        //   children: [
+        //     "default",
+        //   ]
+        // }
+      ],
     },
   ],
 });

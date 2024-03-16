@@ -1,5 +1,7 @@
 {
     "cSpell.words": [
+        "aiohttp",
+        "NATS",
         "psqlpy",
         "savepoint"
     ]
