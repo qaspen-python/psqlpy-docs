@@ -1,6 +1,7 @@
 ---
 title: Connection
 ---
+
 `Connection` object represents single connection to the `PostgreSQL`. You must work with database within it.  
 `Connection` get be made with `PSQLPool().connection()` method.
 
@@ -23,12 +24,14 @@ async def main() -> None:
 ### Execute
 
 #### Parameters:
+
 - `querystring`: Statement string.
 - `parameters`: List of parameters for the statement string.
 - `prepared`: Prepare statement before execution or not.
 
 You can execute any query directly from `Connection` object.  
-This method supports parameters, each parameter must be marked as `$<number>` in querystring (number starts with 1).  
+This method supports parameters, each parameter must be marked as `$<number>` in querystring (number starts with 1).
+
 ```python
 async def main() -> None:
     ...
@@ -41,10 +44,82 @@ async def main() -> None:
     dict_results: list[dict[str, Any]] = results.result()
 ```
 
-### Transaction
-`Connection` is the only object that can be used to build `Transaction` object.  
+### Execute Many
 
 #### Parameters:
+
+- `querystring`: Statement string.
+- `parameters`: List of list of parameters for the statement string.
+- `prepared`: Prepare statement before execution or not.
+
+This method supports parameters, each parameter must be marked as `$<number>` in querystring (number starts with 1).
+Atomicity is provided, so you don't need to worry about unsuccessful result, because there is a transaction used internally.
+This method returns nothing.
+
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    await connection.execute_many(
+        "INSERT INTO users (name, age) VALUES ($1, $2)",
+        [["boba", 10], ["boba", 20]],
+    )
+```
+
+### Fetch Row
+
+#### Parameters:
+
+- `querystring`: Statement string.
+- `parameters`: List of list of parameters for the statement string.
+- `prepared`: Prepare statements before execution or not.
+
+Sometimes you need to fetch only first row from the result.
+::: warning
+Querystring must return exactly one result or an exception will be raised.
+:::
+
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    query_result: SingleQueryResult = await transaction.fetch_row(
+        "SELECT username FROM users WHERE id = $1",
+        [100],
+    )
+    dict_result: Dict[Any, Any] = query_result.result()
+```
+
+### Fetch Val
+
+#### Parameters
+
+- `querystring`: Statement string.
+- `parameters`: List of list of parameters for the statement string.
+- `prepared`: Prepare statements before execution or not.
+
+If you need to retrieve some value not `QueryResult`.
+::: warning
+Querystring must return exactly one result or an exception will be raised.
+:::
+
+```python
+async def main() -> None:
+    ...
+    connection = await db_pool.connection()
+    # this will be an int value
+    query_result_value = await connection.fetch_row(
+        "SELECT COUNT(*) FROM users WHERE id > $1",
+        [100],
+    )
+```
+
+### Transaction
+
+`Connection` is the only object that can be used to build `Transaction` object.
+
+#### Parameters:
+
 - `isolation_level`: level of isolation. Default how it is in PostgreSQL.
 - `read_variant`: configure read variant of the transaction. Default how it is in PostgreSQL.
 - `deferrable`: configure deferrable of the transaction. Default how it is in PostgreSQL.

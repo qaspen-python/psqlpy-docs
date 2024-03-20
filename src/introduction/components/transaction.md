@@ -1,16 +1,20 @@
 ---
 title: Transaction
 ---
+
 `Transaction` object represents `PostgreSQL` transaction.  
 There are two ways of how we can work with transactions on `PSQLPy` side.
 
 ### Transaction parameters
+
 - `isolation_level`: level of isolation. Default how it is in PostgreSQL.
 - `read_variant`: configure read variant of the transaction. Default how it is in PostgreSQL.
 - `deferrable`: configure deferrable of the transaction. Default how it is in PostgreSQL.
 
 ### Control transaction fully on your own.
+
 First of all, you can get transaction object only from connection object.
+
 ```python
 from psqlpy import PSQLPool
 
@@ -27,6 +31,7 @@ async def main() -> None:
 ```
 
 After this you need to start you transaction or in `PostgreSQL` terms you need to BEGIN it.
+
 ```python
 async def main() -> None:
     ...
@@ -34,7 +39,9 @@ async def main() -> None:
     transaction = connection.transaction()
     await transaction.begin()
 ```
+
 So, after these manipulations you are ready to make you first query with the transaction.
+
 ```python
 async def main() -> None:
     ...
@@ -43,20 +50,25 @@ async def main() -> None:
         ["100", "Alex"],
     )
 ```
+
 Good! We've inserted our first row, but if we won't commit the transaction all changes will discard.  
 ::: warning
 We need to commit changes.
 :::
+
 ```python
 async def main() -> None:
     ...
     await transaction.commit()
 ```
+
 So, now everything is fine, changes are committed. But you can say that it's too complicated and you are right!  
 We have an alternative way to handle `begin()` and `commit()` automatically.
 
 ### Control transaction with async context manager.
+
 There is the previous example but it is rewritten with use of async context manager.
+
 ```python
 from psqlpy import PSQLPool
 
@@ -88,7 +100,9 @@ Transaction can be began only once, so if you have already called `begin()` manu
 ## Transaction methods
 
 ### Begin
+
 You can start a transaction manually.
+
 ```python
 async def main() -> None:
     ...
@@ -97,7 +111,9 @@ async def main() -> None:
 ```
 
 ### Commit
+
 You can commit a transaction manually.
+
 ```python
 async def main() -> None:
     ...
@@ -108,12 +124,14 @@ async def main() -> None:
 ### Execute
 
 #### Parameters:
+
 - `querystring`: Statement string.
 - `parameters`: List of parameters for the statement string.
 - `prepared`: Prepare statement before execution or not.
 
 You can execute any query directly from `Transaction` object.  
-This method supports parameters, each parameter must be marked as `$<number>` (number starts with 1).  
+This method supports parameters, each parameter must be marked as `$<number>` (number starts with 1).
+
 ```python
 async def main() -> None:
     ...
@@ -130,11 +148,13 @@ async def main() -> None:
 ### Execute Many
 
 #### Parameters:
+
 - `querystring`: Statement string.
 - `parameters`: List of list of parameters for the statement string.
 - `prepared`: Prepare statements before execution or not.
 
 If you want to execute the same querystring, but with different parameters, `execute_many` is for you!
+
 ```python
 async def main() -> None:
     ...
@@ -148,6 +168,8 @@ async def main() -> None:
 
 ### Fetch Row
 
+#### Parameters
+
 - `querystring`: Statement string.
 - `parameters`: List of list of parameters for the statement string.
 - `prepared`: Prepare statements before execution or not.
@@ -156,6 +178,7 @@ Sometimes you need to fetch only first row from the result.
 ::: warning
 Querystring must return exactly one result or an exception will be raised.
 :::
+
 ```python
 async def main() -> None:
     ...
@@ -170,6 +193,8 @@ async def main() -> None:
 
 ### Fetch Val
 
+#### Parameters
+
 - `querystring`: Statement string.
 - `parameters`: List of list of parameters for the statement string.
 - `prepared`: Prepare statements before execution or not.
@@ -178,28 +203,32 @@ If you need to retrieve some value not `QueryResult`.
 ::: warning
 Querystring must return exactly one result or an exception will be raised.
 :::
+
 ```python
 async def main() -> None:
     ...
     connection = await db_pool.connection()
     async with connection.transaction() as transaction:
-        query_result: SingleQueryResult = await transaction.fetch_row(
-            "SELECT username FROM users WHERE id = $1",
+        # this will be an int value
+        query_result_value = await transaction.fetch_row(
+            "SELECT COUNT(*) FROM users WHERE id > $1",
             [100],
         )
-    dict_result: Dict[Any, Any] = query_result.result()
 ```
 
 ### Pipeline
 
 #### Parameters
+
 - `queries`: list of tuple. It must have structure like
+
 ```python
 queries = [
     ("SELECT * FROM users WHERE name = $1", ["some_name"]),
     ("SELECT 1", None),
 ]
 ```
+
 - `prepared`: Prepare statements before execution or not.
 
 Execute queries in pipeline.
@@ -210,6 +239,7 @@ each query is sent to the server after the previous query completes.
 In contrast, pipelining allows the client to send all of the
 queries to the server up front, minimizing time spent
 by one side waiting for the other to finish sending data:
+
 ```
             Sequential                               Pipelined
 | Client         | Server          |    | Client         | Server          |
@@ -224,9 +254,11 @@ by one side waiting for the other to finish sending data:
 |                | process query 3 |
 | receive rows 3 |                 |
 ```
+
 [Read more!](https://docs.rs/tokio-postgres/latest/tokio_postgres/#pipelining)
 
 Full example:
+
 ```python
 import asyncio
 
@@ -260,7 +292,9 @@ async def main() -> None:
 ```
 
 ### Savepoint
+
 Savepoint creation. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+
 ```python
 async def main() -> None:
     ...
@@ -270,7 +304,9 @@ async def main() -> None:
 ```
 
 ### Rollback
+
 Rollback the whole transaction. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-rollback.html)
+
 ```python
 async def main() -> None:
     ...
@@ -279,7 +315,9 @@ async def main() -> None:
 ```
 
 ### Rollback To
+
 Rollback to the specified savepoint. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+
 ```python
 async def main() -> None:
     ...
@@ -291,7 +329,9 @@ async def main() -> None:
 ```
 
 ### Release Savepoint
+
 Release savepoint. [PostgreSQL docs](https://www.postgresql.org/docs/current/sql-savepoint.html)
+
 ```python
 async def main() -> None:
     ...
@@ -305,6 +345,7 @@ async def main() -> None:
 ### Cursor
 
 #### Parameters
+
 - `querystring`: Statement string.
 - `parameters`: List of list of parameters for the statement string.
 - `fetch_number`: rewrite default fetch_number. Default is 10.
@@ -312,6 +353,7 @@ async def main() -> None:
 - `prepared`: prepare querystring or not.
 
 From `Transaction` you can create new `Cursor` object which represents cursor in the `PostgreSQL`. [PostgreSQL Docs](https://www.postgresql.org/docs/current/plpgsql-cursors.html)
+
 ```python
 async def main() -> None:
     ...
