@@ -6,8 +6,8 @@ title: Results
 
 Currently there are two results:
 
-- QueryResult - for result with multiple rows
-- SingleQueryResult - for result with exactly one row
+- `QueryResult` - for result with multiple rows
+- `SingleQueryResult` - for result with exactly one row
 
 ## QueryResult methods
 
