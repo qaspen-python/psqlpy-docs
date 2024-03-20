@@ -3,6 +3,7 @@ title: Let's Start
 ---
 
 ## Installation
+
 You can install psqlpy with pip, poetry or directly from git using pip:
 
 ::: code-tabs#shell
@@ -23,17 +24,20 @@ poetry add psqlpy
 ```bash
 pip install git+https://github.com/qaspen-python/psqlpy
 ```
+
 :::
 
 After installation you are ready to start querying!
 
 ## First request to the database
+
 There is a minimal example of what you need to do to send your first query and receive result.  
 Let's assume that we have table `users`:  
-| id | name    | username    |
-| :---:   | :---: | :---: |
-| 1 | Aleksandr   | chandr-andr   |
-| 2 | Michail   | insani7y   |
+| id | name | username |
+| :---: | :---: | :---: |
+| 1 | Aleksandr | chandr-andr |
+| 2 | Michail | insani7y |
+
 ```python
 import asyncio
 from typing import Final
@@ -44,7 +48,6 @@ from psqlpy import PSQLPool, QueryResult
 async def main() -> None:
     # It uses default connection parameters
     db_pool: Final = PSQLPool()
-    await db_pool.startup()
 
     results: Final[QueryResult] = await db_pool.execute(
         "SELECT * FROM users WHERE id = $1",
@@ -54,8 +57,9 @@ async def main() -> None:
     dict_results: Final[list[dict[Any, Any]]] = results.result()
     # You don't need to close pool, rust does it instead.
 ```
+
 ::: tip
-You must call `startup()` on database pool.
+You must call `close()` on database pool when you application is shutting down.
 :::
 ::: caution
 You must not use `PSQLPool.execute` method in high-load production code!  

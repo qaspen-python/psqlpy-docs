@@ -25,7 +25,6 @@ db_pool: Final = PSQLPool(
 
 
 async def main() -> None:
-    await db_pool.startup()
     connection = await db_pool.connection()
     transaction = connection.transaction()
 ```
