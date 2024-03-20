@@ -7,6 +7,7 @@ There is the default example for `AioHTTP` framework.
 We strongly recommend to use the following example as a standard way to use `PSQLPy` with `AioHTTP` framework.
 
 ## Complete example
+
 ```python
 # Start example
 import asyncio
@@ -21,7 +22,6 @@ async def start_db_pool(app: web.Application) -> None:
         dsn="postgres://postgres:postgres@localhost:5432/postgres",
         max_db_pool_size=2,
     )
-    await db_pool.startup()
 
     app["db_pool"] = db_pool
 

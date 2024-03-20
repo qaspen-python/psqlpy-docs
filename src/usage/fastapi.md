@@ -5,6 +5,7 @@ title: FastAPI Usage
 There is the default example for `FastAPI` framework.
 
 ## Standard example.
+
 This code is perfect for situations when your endpoints don't have complex logic
 like sending messages over network with some queues (`RabbitMQ`, `NATS`, `Kafka` and etc)
 or making long calculations, so a connection won't idle to much.  
@@ -28,7 +29,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         dsn="postgres://postgres:postgres@localhost:5432/postgres",
         max_db_pool_size=2,
     )
-    await db_pool.startup()
     app.state.db_pool = db_pool
     yield
     await db_pool.close()
@@ -59,9 +59,11 @@ if __name__ == "__main__":
 ```
 
 ## Advanced example
+
 If you don't have external connection pool like `PGBouncer` and your application have a lot of endpoints with a lot of complex logic,
 so it's better not to take a connection from a pool at the start of an endpoint execution (don't use `Depends()` like in the previous example), because it will be blocked until the end of the endpoint logic.  
 The main idea is take a connection from a pool only for code parts in which it will be used immediately.
+
 ```python
 # Start example
 from contextlib import asynccontextmanager
@@ -81,7 +83,6 @@ db_pool = PSQLPool(
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Startup database connection pool and close it on shutdown."""
-    await db_pool.startup()
     app.state.db_pool = db_pool
     yield
     await db_pool.close()
