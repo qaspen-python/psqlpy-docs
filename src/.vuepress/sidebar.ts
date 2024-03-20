@@ -20,8 +20,9 @@ export default sidebar({
             "connection",
             "transaction",
             "cursor",
+            "results",
           ],
-        }
+        },
       ],
     },
     {
