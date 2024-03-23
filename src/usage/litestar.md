@@ -1,5 +1,5 @@
 ---
-title: Litestar Usage
+title: Litestar
 ---
 
 There is the default example for `Litestar` framework.

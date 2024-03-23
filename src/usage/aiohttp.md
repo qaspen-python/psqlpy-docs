@@ -1,5 +1,5 @@
 ---
-title: AioHTTP Usage
+title: AioHTTP
 ---
 
 There is the default example for `AioHTTP` framework.

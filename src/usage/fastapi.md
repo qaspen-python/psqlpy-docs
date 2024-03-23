@@ -1,5 +1,5 @@
 ---
-title: FastAPI Usage
+title: FastAPI
 ---
 
 There is the default example for `FastAPI` framework.

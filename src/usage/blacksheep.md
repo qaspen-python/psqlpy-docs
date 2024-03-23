@@ -1,10 +1,10 @@
 ---
-title: Blacksheep Usage
+title: Blacksheep
 ---
 
 There is the default example for `Blacksheep` framework.
 
-We strongly recommend to use the following example as a standard way to use `PSQLPy` with Blacksheep` framework.
+We strongly recommend to use the following example as a standard way to use `PSQLPy` with `Blacksheep` framework.
 
 ## Complete example
 
@@ -54,6 +54,6 @@ async def pg_pool_example(db_pool: PSQLPool) -> list[dict[Any, Any]]:
 
 if __name__ == "__main__":
     uvicorn.run(
-        "app.__main__:app",
+        "start_example:app",
     )
 ```

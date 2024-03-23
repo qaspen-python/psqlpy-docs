@@ -34,6 +34,7 @@ export default sidebar({
         "fastapi",
         "litestar",
         "blacksheep",
+        "robyn",
         // {
         //   text: "FastAPI",
         //   prefix: "fastapi/",
