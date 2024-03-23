@@ -18,6 +18,7 @@ import uvicorn
 from blacksheep import Application, get
 from psqlpy import PSQLPool
 
+
 app = Application()
 
 

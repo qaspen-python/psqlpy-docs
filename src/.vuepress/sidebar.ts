@@ -32,6 +32,8 @@ export default sidebar({
       children: [
         "aiohttp",
         "fastapi",
+        "litestar",
+        "blacksheep",
         // {
         //   text: "FastAPI",
         //   prefix: "fastapi/",
