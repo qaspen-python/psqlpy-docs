@@ -55,7 +55,7 @@ async def main() -> None:
     )
 
     dict_results: Final[list[dict[Any, Any]]] = results.result()
-    # You don't need to close pool, rust does it instead.
+    await db.close()
 ```
 
 ::: tip
