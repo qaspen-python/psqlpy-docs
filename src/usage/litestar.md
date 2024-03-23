@@ -1,10 +1,10 @@
 ---
-title: AioHTTP Usage
+title: Litestar Usage
 ---
 
-There is the default example for `AioHTTP` framework.
+There is the default example for `Litestar` framework.
 
-We strongly recommend to use the following example as a standard way to use `PSQLPy` with `AioHTTP` framework.
+We strongly recommend to use the following example as a standard way to use `PSQLPy` with `Litestar` framework.
 
 ## Complete example
 
