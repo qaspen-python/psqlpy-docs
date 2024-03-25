@@ -29,7 +29,8 @@ async def main() -> None:
 
 ### As class
 
-Get the result as a list of passed class instances
+Get the result as a list of passed class instances.
+Passed class can easily be either pydantic or msgspec model.
 
 ```python
 class ExampleOfAsClass:
@@ -71,6 +72,7 @@ async def main() -> None:
 ### As class
 
 Get the result as a passed class instance.
+Passed class can easily be either pydantic or msgspec model.
 
 ```python
 class ExampleOfAsClass:
